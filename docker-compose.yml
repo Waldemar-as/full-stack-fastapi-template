@@ -26,6 +26,12 @@ services:
     environment:
       - ADMINER_DESIGN=pepa-linha-dark
 
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1026:1025"  # Changed from 1025 to avoid conflicts
+      - "1080:1080"
+
   prestart:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     build:
@@ -33,7 +39,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-        restart: true
     command: bash scripts/prestart.sh
     env_file:
       - .env
@@ -62,7 +67,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-        restart: true
       prestart:
         condition: service_completed_successfully
     env_file:
@@ -104,3 +108,6 @@ services:
 
 volumes:
   app-db-data:
+
+networks:
+  default:
