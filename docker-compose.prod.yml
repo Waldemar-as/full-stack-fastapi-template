@@ -78,8 +78,10 @@ services:
     build:
       context: ./frontend
       args:
-        - VITE_API_URL=http://localhost:8000
+        - VITE_API_URL
         - NODE_ENV=production
+    env_file:
+      - .env
     ports:
       - "5173:80"
 
